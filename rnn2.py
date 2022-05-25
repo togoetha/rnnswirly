@@ -111,7 +111,7 @@ def train_model():
     flat_state_batches = state_batches.reshape(-1, *state_batches.shape[-2:])
     flat_scores = qos_scores.reshape(-1, *qos_scores.shape[-1:])
 
-    q_ish_rnn.fit(x=flat_state_batches, y=flat_scores)#, epochs=3)
+    q_ish_rnn.fit(x=flat_state_batches, y=flat_scores, epochs=3)
 
     validatefile = "busymetrics.csv"
     validate_batches,validate_qos = load_trips(validatefile,fognodes,series_length,timesteps,q_lookahead)
