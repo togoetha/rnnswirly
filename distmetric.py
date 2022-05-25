@@ -8,8 +8,8 @@ import numpy
 
 from model_profiler import model_profiler
 
-ndims = 20
-train_samples = 2000
+ndims = 5
+train_samples = 200000
 validate_samples = 200000
 writeresults = False
 
@@ -33,7 +33,7 @@ def generate_euclid(samples):
     netrnd = random.randint(0, 100)
     deployedrnd = random.randint(0, 1)
     distsqr = gm1_dist(xrnd, yrnd, deployedrnd, memrnd, netrnd) 
-    x_euclid[i] = [xrnd / 256, yrnd / 256, deployedrnd, memrnd / 1024, netrnd / 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    x_euclid[i] = [xrnd / 256, yrnd / 256, deployedrnd, memrnd / 1024, netrnd / 100]#, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     y_euclid[i] = distsqr / (euclid_maxdist * euclid_maxdist)
   return x_euclid, y_euclid
 
@@ -51,14 +51,14 @@ def generate_resourced(samples):
     netrnd = random.randint(0, 100)
     deployedrnd = random.randint(0, 1)
     distsqr = gm2_dist(xrnd, yrnd, deployedrnd, memrnd, netrnd) #(xrnd * xrnd) + (yrnd * yrnd) + deployedrnd * 10000 + 49 * scale_neg_sigmoid(memrnd, 1024) + 900 * scale_neg_sigmoid(netrnd, 100)
-    x_resourced[i] = [xrnd / 256, yrnd / 256, deployedrnd, memrnd / 1024, netrnd / 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    x_resourced[i] = [xrnd / 256, yrnd / 256, deployedrnd, memrnd / 1024, netrnd / 100]#, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     y_resourced[i] = distsqr / (resourced_maxdist * resourced_maxdist)
   return x_resourced, y_resourced
 
 def experiment_run(trainx, trainy, validatex, validatey, maxdist, file):
   model.fit(trainx, trainy, epochs=5)
   start_time = time.time()
-  model.evaluate(validatex, validatey, verbose=2)
+  output = model(validatex)#.evaluate(validatex, validatey, verbose=2)
   print("--- %s seconds ---" % (time.time() - start_time))
 
   if (writeresults):
